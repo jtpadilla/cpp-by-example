@@ -36,5 +36,11 @@ int main() {
   // Un 'A' no se puede constuir con tres parametros
   std::cout << "A(int,int,int): " << std::is_constructible<A,int,int,int>::value << std::endl;
 
+  // Un 'A' Se puede constuir con un parametro int o otro float
+  std::cout << "A(int,float): " << std::is_constructible<A,int,float>::value << std::endl;
+
+  // Un 'A' Se puede constuir con dos parametros float
+  std::cout << "A(float,float): " << std::is_constructible<A,float,float>::value << std::endl;
+
   return 0;
 }
