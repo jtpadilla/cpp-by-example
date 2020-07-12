@@ -4,19 +4,36 @@
 #include <thread>
 #include <chrono>
 using namespace std::chrono_literals;
- 
-std::condition_variable cv;
+
+// Mutex 
 std::mutex cv_m;
+
+// Condicion de variable
+std::condition_variable cv;
+
+// Un int con acceso atomico
 std::atomic<int> i{0};
  
 void waits(int idx)
 {
+
+    // Se utiliza el mutex para obtener un acceso exclusivo
     std::unique_lock<std::mutex> lk(cv_m);
+
+    // Se toma una referencia de tiempo
     auto now = std::chrono::system_clock::now();
-    if(cv.wait_until(lk, now + idx*100ms, [](){return i == 1;}))
+
+    // Se espera que se cunpla la condicion hasta 100 milliseconds mas tarde de la referencia
+    if (cv.wait_until(lk, now + idx*100ms, [](){return i == 1;}))
+    {
+        // Este thread ha consegudo el acceso exclusivo
         std::cerr << "Thread " << idx << " finished waiting. i == " << i << '\n';
+    }
     else
+    {
+        // Este thread no ha consegudo el acceso exclusivo
         std::cerr << "Thread " << idx << " timed out. i == " << i << '\n';
+    }
 }
  
 void signals()
